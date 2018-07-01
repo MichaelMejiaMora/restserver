@@ -1,11 +1,22 @@
+// ====================================
+// Importando librerías externas
+// ====================================
 const express = require('express')
 const bcrypt = require('bcrypt')
 const _ = require('underscore')
 
+// Importa el userSchema
 const User = require('../models/user')
+
+// Importa middlewares
 const {verificaToken, verificaAdmin_Role} = require('../middlewares/autenticacion')
+
+// Inicializa app como instancia de express
 const app = express()
 
+// ====================================
+// Procesando las peticiones GET (read)
+// ====================================
 app.get('/usuario', verificaToken, (req, res) => {
   let limit = req.query.limit || 5
   limit = Number(limit)
@@ -28,7 +39,9 @@ app.get('/usuario', verificaToken, (req, res) => {
       })
     })
 })
-
+// ====================================
+// Procesando las peticiones POST (create)
+// ====================================
 app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
   let body = req.body
   let user = new User({
@@ -52,7 +65,9 @@ app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
     })
   })
 })
-
+// ====================================
+// Procesando las peticiones PUT (update)
+// ====================================
 app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
   let id = req.params.id
   let body = _.pick(req.body,['nombre', 'email', 'img', 'role', 'estado'])
@@ -71,7 +86,9 @@ app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     })
   })
 })
-
+// ====================================
+// Procesando las peticiones DELETE
+// ====================================
 app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
   let id = req.params.id
 

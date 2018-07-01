@@ -1,13 +1,18 @@
+// ====================================
+// Importando librerías externas
+// ====================================
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
+// Define los roles válidos
 const validRoles = {
   values: ['ADMIN_ROLE', 'USER_ROLE'],
   message: '{VALUE} no es un rol válido'
 }
-
+// Define un nuevo esquema de BD
 let Schema = mongoose.Schema
 
+// Define una nueva instancia de Schema
 let userSchema = new Schema({
   nombre: {
     type: String,
@@ -41,7 +46,7 @@ let userSchema = new Schema({
   }
 })
 
-//  Quitamos la propiedad del objeto user antes de regresarlo como respuesta JSON
+// Eliminamos la propiedad password antes de regresarlo como respuesta JSON
 userSchema.methods.toJSON = function () {
   let user = this
   let userObject = user.toObject()
@@ -52,4 +57,5 @@ userSchema.methods.toJSON = function () {
 // Usamos mensaje personalizado para la validación de campos únicos
 userSchema.plugin(uniqueValidator, { message: '{PATH} debe ser único' })
 
+// Exportamos el modelo de mongoDB, con el nombre 'User', basado en userSchema
 module.exports = mongoose.model('User', userSchema)
